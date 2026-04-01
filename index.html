@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vanshavriksha I Interactive family tree</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#0D1117;min-height:100vh}
+body{color:#E6EDF3;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+@keyframes flash{0%,100%{background:transparent}50%{background:rgba(255,255,255,0.08)}}
+@keyframes tabPulse{0%,100%{opacity:0.4}50%{opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes altA{0%,36%{opacity:1}50%,86%{opacity:0}100%{opacity:1}}
+@keyframes altB{0%,36%{opacity:0}50%,86%{opacity:1}100%{opacity:0}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script>
+var e=React.createElement,useState=React.useState,useMemo=React.useMemo,useCallback=React.useCallback,useRef=React.useRef,useEffect=React.useEffect;
+
+
+var P={
+r1:['Chamaru Rudra','m','R'],r1s:['Wife of Chamaru Rudra','f','R'],
+r2:['Jugal Kishore Rudra','m','R'],r2s:['Wife of Jugal Kishore Rudra','f','R'],
+r3:['Naba Kishore Rudra','m','R'],r3s:['Brahmamayee Ghosh','f','R'],
+r4:['Lalit Mohan Rudra','m','R'],r4s:['Nirmala Bose','f','R'],
+r5:['Nani Gopal Rudra','m','R'],r5s:['Chinmayee Ghosh','f','R'],
+r6:['Niharkana Rudra','f','R'],r6s:['Nikhil Chandra Guha','m','R'],
+r7:['Chittaranjan Rudra','m','R'],r7s:['Pratima Guha','f','R'],
+r8:['Gour Gopal Rudra','m','R'],
+r9:['Nitya Gopal Rudra','m','R'],r9s:['Sandhya Bose','f','R'],
+r10:['Kalyani Rudra','f','R'],
+r11:['Sanjib Rudra','m','R'],r11s:['Manju Dey','f','R'],
+r12:['Gauri Rudra','f','R'],r12s:['Rashbihari Ghose','m','R'],
+r13:['Dipti Rudra','f','R'],r13s:['Sreemoy Mitra','m','R'],
+r14:['Chiranjib Rudra','m','R'],r14s:['Uma Kar','f','R'],
+r15:['Shantwana Rudra','f','R'],
+r16:['Rama Guha','f','R'],r16s:['Sukhendu Dutta','m','R'],
+r17:['Kumkum Guha','f','R'],r17s:['Sushanta Pal','m','R'],
+r18:['Srijeeb Rudra','m','R'],r19:['Satanjeeb Rudra','m','R'],
+r20:['Alpana Rudra','f','R'],r20s:['Shyamal Ghosh','m','R'],
+r21:['Baisakhi Rudra','f','R'],
+r22:['Ratnadeep Rudra','m','R'],
+r23:['Shuktara Rudra','f','R'],
+r24:['Sunandita Rudra','f','R'],r24s:['Parthasarthy Ghosh','m','R'],
+r25:['Paromita Rudra','f','R'],r25s:['Pinaki Basu Roy Chowdhury','m','R'],
+r26:['Shubhrabindu Ghose','m','R'],r26s:['Mahasweta Sarkar','f','R'],
+r27:['Sampad Mitra','m','R'],r27s:['Samyksha Thakur','f','R'],
+r28:['Moumita Rudra','f','R'],
+r29:['Anindita Dutta','f','R'],r29s:['Snehashish Sarkar','m','R'],
+r30:['Kalparup Pal','m','R'],
+r31:['Shubhayan Ghosh','m','R'],
+r32:['Ritwik Rudra','m','R'],r32s:['Piyu Bajaj','f','R'],
+r33:['Prarthitha Ghosh','f','R'],
+r34:['Parag Roy Chowdhury','m','R'],r35:['Paulami Roy Chowdhury','f','R'],
+r36:['Sarthak Mitra','m','R'],
+d1:['Kanhai Lal Dutta','m','D'],d1s:['Wife of Kanhai Lal Dutta','f','D'],
+d2:['Kunja Lal Dutta','m','D'],d2s:['Suhasini Deb Lala','f','D'],
+d3:['Bipin Bihari Dutta','m','D'],d3s:['Wife of Bipin Bihari Dutta','f','D'],
+d4:['Khaunish Bandhu Dutta','m','D'],d4s:['Shukla Gupta','f','D'],
+d5:['Dipti Dutta','f','D'],
+d6:['Kalyan Bandhu Dutta','m','D'],d6s:['Shanti Chakrabarty','f','D'],
+d7:['Bina Dutta','f','D'],d7s:['Sudharanjan Ghosh','m','D'],
+d8:['Partha Bandhu Dutta','m','D'],d8s:['Archana Chowdhury','f','D'],
+d9:['Dipak Bandhu Dutta','m','D'],d9s:['Kumkum Bhattacharya','f','D'],
+d10:['Sudipta Dutta','f','D'],d10s:['Suhas Dutta Roy','m','D'],
+d11:['Bijit Dutta','m','D'],d12:['Shubhra Dutta','f','D'],
+d13:['Biswadeep Dutta','m','D'],d13s:['Nandini Bose','f','D'],
+d14:['Chitradeep Dutta','m','D'],d14s:['Papiya Kar','f','D'],
+d15:['Srijata Dutta','f','D'],d15s:['Dilip De Sarkar','m','D'],
+d16:['Debjani Ghosh','f','D'],d16s:['Raju Srimani','m','D'],
+d17:['Amrapali Ghosh','f','D'],d17s:['Subal Ghosh','m','D'],
+d18:['Debraj Ghosh','m','D'],
+d19:['Avik Dutta','m','D'],d19s:['Ambali Bhattacharya','f','D'],
+d20:['Amitabh Dutta','m','D'],d20s:['Nilanjana Bose','f','D'],
+d21:['Nandini Dutta','f','D'],d21s:['Sachin Gadvi','m','D'],
+d22:['Emily Dutta','f','D'],
+d23:['Sumantra Dutta Roy','m','D'],d23s:['Shraddha Ganguly','f','D'],
+d24:['Souvik Dutta Roy','m','D'],
+d25:['Priyasha Dutta','f','D'],d25s:['Shirsho Ghosh','m','D'],
+d26:['Agniva De Sarkar','m','D'],
+d27:['Timi De Sarkar','f','D','a'],
+d28:['Deb Srimani','m','D'],d28s:['Nabanita Chakrabarty','f','D'],
+d29:['Saheli Ghosh','f','D'],d29s:['Indranil Roy','m','D'],
+d30:['Adyashakti Dutta','f','D'],d31:['Arna Dutta','f','D'],
+d32:['Gayatri Advi','f','D'],d33:['Aditi Gadvi','f','D'],
+d34:['Sohum Dutta Roy','m','D'],
+d35:['Srihaan Ghosh','m','D'],d36:['Advik Roy','m','D'],
+m1:['Raja Ram Mitra','m','M'],m1s:['Wife of Raja Ram Mitra','f','M'],
+m2:['Jagabandhu Mitra','m','M'],m2s:['Wife of Jagabandhu Mitra','f','M'],
+m3:['Bangshi Badan Mitra','m','M'],m3s:['Wife of Bangshi Badan Mitra','f','M'],
+m4:['Pulin Bihari Mitra','m','M'],m4s:['First wife of Pulin Bihari Mitra','f','M'],
+m4s2:['Niharkana Guha','f','M'],
+m5:['Renukana Mitra','f','M'],m5s:['Proboth Chandra Dutta','m','M'],
+m6:['Anu Mitra','f','M'],
+m7:['Anil Kumar Mitra','m','M'],
+m8:['Jyotirmayee Mitra','f','M'],
+m9:['Gopal Chandra Mitra','m','M'],m9s:['Ranjita Dutta','f','M'],
+m10:['Manik Lal Mitra','m','M'],m10s:['Banani Das','f','M'],
+m11:['Geeta Mitra','f','M'],m11s:['Sanjeev Mukherjee','m','M'],
+m12:['Jayanta Kumar Mitra','m','M'],m12s:['Sapna Dutta','f','M'],
+m13:['Gauri Dutta','f','M'],m13s:['Nani Bhushan Nag','m','M'],
+m14:['Lily Dutta','f','M'],m14s:['Sushil Guha','m','M'],
+m15:['Bulu Dutta','f','M'],m15s:['Dilip Dutta','m','M'],
+m16:['Shikha Dutta','f','M'],m16s:['Mrinal Sen','m','M'],
+m17:['Aparna Dutta','f','M'],m17s:['Sunil Sarkar','m','M'],
+m18:['Deepak Dutta','m','M'],m18s:['Rita Biswas','f','M'],
+m19:['Arati Dutta','f','M'],m19s:['Dilip Bose','m','M'],
+m20:['Ashok Dutta','m','M'],
+m21:['Jagadish Chandra Dutta','m','M'],m21s:['Sabita Das','f','M'],
+m22:['Debjani Mitra','f','M'],
+m23:['Rumi Mitra','f','M','s'],
+m24:['Sharmishtha Mitra','f','M'],m24s:['Vivek Guha Thakurta','m','M'],
+m25:['Arindam Mitra','m','M'],m25s:['Jaishree Bhattacharya','f','M'],
+m26:['Priyabrata Mitra','m','M'],m26s:['Lipika Mitra','f','M'],
+m27:['Mahashweta Mitra','f','M','s'],
+m28:['Pooja Mukherjee','f','M'],
+m29:['Vandana Mukherjee','f','M'],m29s:['Jaysheel Raina','m','M'],
+m30:['Gautam Mukherjee','m','M'],m30s:['Seema','f','M'],
+m31:['Shaonli Mitra','f','M','s'],
+m32:['Saikat Nag','m','M'],m33:['Sameer Nag','m','M'],m34:['Anjana Nag','f','M'],
+m35:['Animesh Guha','m','M'],m36:['Soma Guha','f','M'],m37:['Sutapa Guha','f','M'],
+m38:['Mona Dutta','f','M'],m39:['Babla Dutta','m','M'],m40:['Chhoton Dutta','m','M'],
+m41:['Pinky Sen','f','M'],
+m42:['Arpita Sarkar','f','M'],m43:['Sushobhan Sarkar','f','M'],
+m44:['Dibyendu Dutta','m','M'],m45:['Trisha Dutta','f','M'],
+m46:['Satwik Mitra','m','M'],
+m47:['Anirban Guha Thakurta','m','M'],m48:['Monali Mitra','f','M'],
+m49:['Nayanika Mitra','f','M'],m50:['Ahana Das','f','M'],
+m51:['Sagnik Biswas','m','M'],
+m32s:['Wife of Saikat Nag','f','M'],m33s:['Wife of Sameer Nag','f','M'],
+m34s:['Husband of Anjana Nag','m','M'],m35s:['Wife of Animesh Guha','f','M'],
+m36s:['Bose','m','M','p'],m37s:['Husband of Sutapa Guha','m','M'],
+m38s:['Husband of Mona Dutta','m','M'],m39s:['Wife of Babla Dutta','f','M'],
+m40s:['Wife of Chhoton Dutta','f','M'],m41s:['Mukherjee','m','M','p'],
+m42s:['Malakar','m','M','p'],m43s:['Husband of Sushobhan Sarkar','m','M'],
+m44s:['Wife of Dibyendu Dutta','f','M'],m45s:['Husband of Trisha Dutta','m','M'],
+g1:['Shyama Kanta Ghosh','m','G'],g1s:['Wife of Shyama Kanta Ghosh','f','G'],
+g2:['Raj Chandra Ghosh','m','G'],g2s:['Wife of Raj Chandra Ghosh','f','G'],
+g3:['Kashish Chandra Ghosh','m','G'],g3s:['Wife of Kashish Chandra Ghosh','f','G'],
+g4:['Digendra Narayan Ghosh','m','G','a'],g4s:['Nalinibala Basu','f','G'],
+g5:['Dinendra Narayan Ghosh','m','G'],g5s:['Subarnaprabha Guha Thakurta','f','G'],
+g6:['Ashalata Ghosh','f','G'],g6s:['Nripendra Nath Bose','m','G'],
+g7:['Dwijendra Narayan Ghosh','m','G'],g7s:['Shanti Brahma','f','G'],
+g8:['Snehalata Ghosh','f','G'],g8s:['Amulyanath Nag Biswas','m','G'],
+g9:['Sudhindra Narayan Ghosh','m','G'],g9s:['Uma Basu','f','G'],
+g10:['Amiyo Bala Ghosh','f','G'],g10s:['Jogesh Chandra Sarkar','m','G'],
+g11:['Rathindra Narayan Ghosh','m','G'],g11s:['Nibedita Bose','f','G'],
+g12:['Indumati Ghosh','f','G'],g12s:['Sukamal Nandi','m','G'],
+g13:['Bhupendra Narayan Ghosh','m','G'],g13s:['Sabita Ghosh','f','G'],
+g14:['Aparna Ghosh','f','G'],
+g15:['Barindra Narayan Ghosh','m','G'],g15s:['Krishna Chatterjee','f','G'],
+g16:['Bani Ghosh','f','G'],
+g17:['Ashoka Ghosh','f','G'],
+g18:['Dwipendra Narayan Ghosh','m','G'],g18s:['Neelika Dutta','f','G'],
+g19:['Nirmal Kumar Bose','m','G'],g19s:['Reba','f','G'],
+g20:['Neelima Bose','f','G'],g20s:['Bhabesh Mitra','m','G'],
+g21:['Deep Narayan Ghosh','m','G'],g21s:['Jayanti Roy','f','G'],
+g22:['Amarendranath Nag Biswas','m','G'],g22s:['Baby','f','G'],
+g23:['Shefali Nag Biswas','f','G'],g23s:['Ajit Bose','m','G'],
+g24:['Nirendranath Nag Biswas','m','G'],g24s:['Manju','f','G'],
+g25:['Chhaya Nag Biswas','f','G'],g25s:['Bhola','m','G'],
+g26:['Hitendra Narayan Ghosh','m','G'],g26s:['Maitrayee Nee Chandra','f','G'],
+g27:['Pradeep Ghosh','m','G'],g27s:['Chandra Gupta','f','G'],
+g28:['Krishna Ghosh','f','G'],g28s:['Tapan Majumdar','m','G'],
+g29:['Santvana Sarkar','f','G'],g29s:['Sachindra Narayan Ghosh','m','G'],
+g30:['Jyotish Chandra Sarkar','m','G'],g30s:['Hashi','f','G'],
+g31:['Bhupesh Ranjan Sarkar','m','G'],g31s:['Tripti','f','G'],
+g32:['Asit Baran Sarkar','m','G'],g32s:['Namita','f','G'],
+g33:['Gora Ghosh','m','G'],g33s:['Mita Bose','f','G'],
+g34:['Pradeep Narayan Ghosh','m','G'],g34s:['Shonali Dutta','f','G'],
+g35:['Shankar Narayan Ghosh','m','G'],g35s:['Indrani Ghosh','f','G'],
+g36:['Kalyan Kumar Nandi','m','G'],g36s:['Swaha','f','G'],
+g37:['Sanjukta Ghosh','f','G'],g37s:['Arindam Bose','m','G'],
+g38:['Anindya Narayan Ghosh','m','G'],g38s:['Bipasha Mukherjee','f','G'],
+g39:['Soma Ghosh','f','G'],
+g40:['Kalyani Bose','f','G'],g40s:['Saurav Roy','m','G'],
+g41:['Anuradha Bose','f','G'],g41s:['Raja Ghosh','m','G'],
+g42:['Bhaskar Bose','m','G'],
+g43:['Babli Mitra','m','G'],g43s:['Ruma','f','G'],
+g44:['Mita Mitra','f','G'],g44s:['Debabrata Guha','m','G'],
+g45:['Bapun Mitra','m','G'],g45s:['Rupa','f','G'],
+g46:['Uma Mitra','f','G'],g46s:['Prabir','m','G'],
+g47:['Dipto Narayan Ghosh','m','G'],
+g48:['Shatadipa Ghosh','f','G'],g48s:['Abhishek Chatterjee','m','G'],
+g49:['Sivendra Narayan Ghosh','m','G'],g49s:['Sabita Ghosh','f','G'],
+g50:['Sarbani Sarkar','f','G'],g50s:['Sumit Samadder','m','G'],
+g51:['Ambarish Sarkar','m','G'],g51s:['Srimanti','f','G'],
+g52:['Priyanka Ghosh','f','G'],g52s:['Gaurav Dayal','m','G'],
+g53:['Rajashree Ghosh','f','G'],g53s:['Debanjan Dutta','m','G'],
+g54:['Ishaan Ghosh','m','G'],
+g55:['Indrani Majumdar','f','G'],g55s:['Michael Schumann','m','G'],
+g56:['Debadrita Ghosh','f','G'],g56s:['Saurav Sarkar','m','G'],
+g57:['Chandrima Ghosh','f','G'],g57s:['Ram','m','G'],
+g58:['Rohit Narayan Ghosh','m','G'],
+g59:['Nirbhik Ghosh','m','G'],g59s:['Mrinmayee Jadhav','f','G'],
+g60:['Sujata Nandi','f','G'],g60s:['Sandeep Roy','m','G'],
+g61:['Swagata Nandi','f','G'],g61s:['Punyobrata Dasgupta','m','G'],
+g62:['Dipanjana Bose','f','G'],g62s:['Rohit Roy','m','G'],
+g63:['Ayush Narayan Ghosh','m','G'],
+g64:['Paromita Roy','f','G'],g64s:['Avik Dutta','m','G'],
+g65:['Arpita Roy','f','G'],g65s:['Nishant Ram','m','G'],
+g66:['Oindrilla Ghosh','f','G','s'],
+g67:['Mishti Ghosh','f','G'],g67s:['Arup Dutta','m','G'],
+g68:['Rishita Guha','f','G'],g68s:['Avik Tushar Das','m','G'],
+g69:['Adrija Mitra','f','G'],g69s:['Turin Dutta','m','G'],
+g70:['Mihir Dayal','m','G'],g71:['Agastya Dutta','m','G'],
+g72:['Maya Schumann','f','G'],g73:['Sanvi Sarkar','f','G'],
+g74:['Arish Sarkar','m','G'],
+g75:['Arnab Dutta','m','G'],g76:['Ishaana Dutta','f','G'],
+g77:['Nirvana Ram','m','G'],g78:['Nithwik Ram','m','G'],
+g79:['Sukalpan Ghosh','m','G'],g80:['Aaraina Dutta','f','G'],
+g81:['Rishav Das','m','G'],g82:['Rajarshi Das','m','G']
+};
+
+
+var U=[
+['r1','r1s',['r2']],['r2','r2s',['r3']],['r3','r3s',['r4']],
+['r4','r4s',['r5','r6','r7','r8','r9']],
+['r5','r5s',['r10','r11','r12','r13','r14','r15']],
+['r6','r6s',['r16','r17']],['r7','r7s',['r18','r19','r20','r21']],
+['r8','d5',['r22','r23']],['r9','r9s',['r24']],
+['r11','r11s',['r25']],['r12','r12s',['r26']],['r13','r13s',['r27']],
+['r14','r14s',['r28']],['r16','r16s',['r29']],['r17','r17s',['r30']],
+['r20','r20s',['r31']],['r22','m22',['r32']],['r24','r24s',['r33']],
+['r25','r25s',['r34','r35']],['r26','r26s',[]],['r27','r27s',['r36']],
+['r29','r29s',[]],['r32','r32s',[]],
+['d1','d1s',['d2','d3']],['d2','d2s',['d4','d5','d6','d7','d8','d9','d10']],
+['d3','d3s',['d11','d12']],['d4','d4s',['d13','d14']],
+['d6','d6s',['d15']],['d7','d7s',['d16','d17','d18']],
+['d8','d8s',['d19','d20']],['d9','d9s',['d21','d22']],
+['d10','d10s',['d23','d24']],['d13','d13s',['d25']],['d14','d14s',[]],
+['d15','d15s',['d26','d27']],['d16','d16s',['d28']],['d17','d17s',['d29']],
+['d19','d19s',['d30']],['d20','d20s',['d31']],['d21','d21s',['d32','d33']],
+['d23','d23s',['d34']],['d25','d25s',['d35']],['d28','d28s',[]],
+['d29','d29s',['d36']],
+['m1','m1s',['m2']],['m2','m2s',['m3']],['m3','m3s',['m4']],
+['m4','m4s',['m5','m6']],['m4','m4s2',['m7','m8','m9','m10','m11','m12']],
+['m5','m5s',['m13','m14','m15','m16','m17','m18','m19','m20','m21']],
+['m7','g16',['m22','m23']],['m9','m9s',['m24','m25']],
+['m10','m10s',['m26','m27']],['m11','m11s',['m28','m29','m30']],
+['m12','m12s',['m31']],['m13','m13s',['m32','m33','m34']],
+['m14','m14s',['m35','m36','m37']],['m15','m15s',['m38','m39','m40']],
+['m16','m16s',['m41']],['m17','m17s',['m42','m43']],
+['m18','m18s',['m44']],['m19','m19s',[]],['m21','m21s',['m45']],
+['m23',null,['m46']],['m24','m24s',['m47']],['m25','m25s',['m48']],
+['m26','m26s',['m49']],['m27',null,['m50']],['m29','m29s',[]],
+['m30','m30s',[]],['m31',null,['m51']],
+['m32','m32s',[]],['m33','m33s',[]],['m34','m34s',[]],['m35','m35s',[]],
+['m36','m36s',[]],['m37','m37s',[]],['m38','m38s',[]],['m39','m39s',[]],
+['m40','m40s',[]],['m41','m41s',[]],['m42','m42s',[]],['m43','m43s',[]],
+['m44','m44s',[]],['m45','m45s',[]],
+['g1','g1s',['g2']],['g2','g2s',['g3']],['g3','g3s',['g4']],
+['g4','g4s',['g5','g6','g7','g8','g9','g10','g11','g12']],
+['g5','g5s',['g13','g14','g15','g16','g17','g18']],
+['g6','g6s',['g19','g20']],['g7','g7s',['g21']],
+['g8','g8s',['g22','g23','g24','g25']],['g9','g9s',['g26','g27','g28']],
+['g10','g10s',['g29','g30','g31','g32']],['g11','g11s',['g33','g34','g35']],
+['g12','g12s',['g36']],['g13','g13s',['g37']],['g15','g15s',['g38']],
+['g18','g18s',['g39']],['g19','g19s',['g40','g41','g42']],
+['g20','g20s',['g43','g44','g45','g46']],['g21','g21s',['g47','g48']],
+['g22','g22s',[]],['g23','g23s',[]],['g24','g24s',[]],['g25','g25s',[]],
+['g26','g26s',['g52','g53']],['g27','g27s',['g54']],['g28','g28s',['g55']],
+['g29','g29s',['g49']],['g30','g30s',[]],['g31','g31s',['g50']],
+['g32','g32s',['g51']],['g33','g33s',['g56']],['g34','g34s',['g57','g58']],
+['g35','g35s',['g59']],['g36','g36s',['g60','g61']],
+['g37','g37s',['g62']],['g38','g38s',['g63']],
+['g40','g40s',['g64','g65']],['g41','g41s',['g66','g67']],
+['g44','g44s',['g68']],['g45','g45s',['g69']],
+['g48','g48s',[]],['g49','g49s',[]],['g50','g50s',[]],
+['g51','g51s',['g74']],['g52','g52s',['g70']],['g53','g53s',['g71']],
+['g55','g55s',['g72']],['g56','g56s',['g73']],
+['g57','g57s',[]],['g59','g59s',[]],['g60','g60s',[]],['g61','g61s',[]],
+['g62','g62s',[]],['g64','g64s',['g75','g76']],['g65','g65s',['g77','g78']],
+['g66',null,['g79']],['g67','g67s',['g80']],['g68','g68s',['g81','g82']],
+['g69','g69s',[]],['g43','g43s',[]],['g46','g46s',[]]
+];
+
+
+/* ── Lookup maps (O(1) instead of linear scans) ── */
+var UByParent={},UByChild={},UBySpouse={};
+U.forEach(function(u){
+  if(!UByParent[u[0]])UByParent[u[0]]=[];
+  UByParent[u[0]].push(u);
+  if(u[1])UBySpouse[u[1]]=u;
+  u[2].forEach(function(c){UByChild[c]=u});
+});
+
+function getUnions(pid){return UByParent[pid]||[]}
+function getParentUnion(pid){return UByChild[pid]||null}
+function getMarriedInto(pid){return UBySpouse[pid]||null}
+
+
+var FM={
+R:{name:'Rudra',color:'#B594D4',root:'r1',gotra:'Kanva',gotraDesc:"Shakuntala’s foster father. Shakuntala is the daughter of Vishvamitra \u2014 a Saptarishi of the Swayambhuva Manvantara and the Vaivasvata Manvantara \u2014 and the Maneka Apsara. Shakuntala and her husband Dushyanta fathered Bharata \u2014 the progenitor of the Kaurava lineage. Kanva's father is Medhatithi, whose lineage traces back to Angirasa \u2014 a Saptarishi of the Swayambhuva Manvantara"},
+D:{name:'Dutta',color:'#C4856B',root:'d1',gotra:'Gautama',gotraDesc:"A Saptarishi of the Vaivasvata Manvantara and the brother of Brihaspati \u2014 guru of the Devas. Gautama's father is Angirasa \u2014 a Saptarishi of the Swayambhuva Manvantara"},
+M:{name:'Mitra',color:'#7BA97B',root:'m1',gotra:'Vishvamitra',gotraDesc:"A Saptarishi of the Vaivasvata Manvantara and the drashta of the Gayatri Mantra. Born as Kaushika \u2014 a Chandravanshi raja \u2014 he attained the title of a Brahmarishi and the name Vishvamitra through rigorous penance. This transformation was recognized by his rival-turned-mentor Vashishtha \u2014 a Saptarishi of the Swayambhuva Manvantara and the Vaivasvata Manvantara"},
+G:{name:'Ghosh',color:'#C4AC6B',root:'g1',gotra:'Soukalin',gotraDesc:"Makaranda Ghosh \u2014 the patriarch of the Ghosh lineage within the Bengali Kayastha community \u2014 established the Soukalin lineage. Makaranda's father is Shriharsa, whose lineage traces back to Kashyapa \u2014 a Saptarishi of the Vaivasvata Manvantara. Kashyapa's father is Marichi \u2014 a Saptarishi of the Swayambhuva Manvantara"}
+};
+
+
+var NOTES={r6s:'A founding member of the East Bengal Football Club',m4s2:{type:'parents',father:'Nabendra Nath Guha',mother:'Nibhanani'}};
+var MC={m:'#6BA3C9',f:'#C97BA3'};
+var COL_A='#E08585',COL_SP='#6BBFC4';
+
+
+function traceToRoot(pid,root){
+  if(pid===root)return new Set();
+  var ids=new Set(),c=pid,seen=new Set();
+  while(true){
+    if(seen.has(c))return null;seen.add(c);
+    var pu=getParentUnion(c);if(!pu)return null;
+    var parentId=pu[0];
+    var parentUnions=getUnions(parentId);
+    for(var i=0;i<parentUnions.length;i++){
+      if(parentUnions[i][2].indexOf(c)!==-1){ids.add(parentId+'-'+i);break}
+    }
+    if(parentId===root)return ids;c=parentId;
+  }
+}
+
+
+function resolveInFamily(pid,fk){
+  var root=FM[fk].root,direct=traceToRoot(pid,root);
+  if(direct)return{path:direct,flash:pid};
+  for(var i=0;i<U.length;i++){
+    if(U[i][1]===pid&&U[i][0]){var pp=traceToRoot(U[i][0],root);if(pp)return{path:pp,flash:U[i][0]}}
+  }
+  return{path:new Set(),flash:pid};
+}
+
+
+function getDescendantKeys(pid){
+  var keys=new Set();
+  var unions=getUnions(pid);
+  unions.forEach(function(u,i){
+    keys.add(pid+'-'+i);
+    u[2].forEach(function(cid){
+      getDescendantKeys(cid).forEach(function(k){keys.add(k)});
+    });
+  });
+  return keys;
+}
+
+
+function renderNote(note){
+  if(typeof note==='string')return note;
+  if(note.type==='parents')return e(React.Fragment,null,
+    e('span',{style:{fontWeight:700}},'Father:'),' ',note.father,e('br'),
+    e('span',{style:{fontWeight:700}},'Mother:'),' ',note.mother,
+    e('span',{style:{color:'#6B7280',fontStyle:'italic'}},' \u2014'));
+  return null;
+}
+
+
+var isFullUnk=function(n){return n.startsWith('Wife of')||n.startsWith('Husband of')||n.startsWith('First wife of')};
+
+
+function PersonLine(props){
+  var p=props.p,fs=props.fontSize,color=props.color,extra=props.extraAfter;
+  var n=p[0],g=p[1],gColor=MC[g],gLabel=g==='f'?'XX':'XY';
+  if(isFullUnk(n)){
+    return e('span',{style:{fontSize:fs,lineHeight:'20px'}},
+      e('span',{style:{fontWeight:700,color:'#4B5563'}},gLabel),' ',
+      e('span',{style:{color:'#6B7280',fontStyle:'italic'}},n),extra);
+  }
+  if(p[3]==='p'){
+    return e('span',{style:{fontSize:fs,lineHeight:'20px'}},
+      e('span',{style:{fontWeight:700,color:gColor}},gLabel),' ',
+      e('span',{style:{color:'#6B7280',fontStyle:'italic'}},'\u2014 '),
+      e('span',{style:{color:color||'#E6EDF3'}},n),extra);
+  }
+  if(n.indexOf(' ')===-1){
+    return e('span',{style:{fontSize:fs,lineHeight:'20px'}},
+      e('span',{style:{fontWeight:700,color:gColor}},gLabel),' ',
+      e('span',{style:{color:color||'#E6EDF3'}},n),
+      e('span',{style:{color:'#6B7280',fontStyle:'italic'}},' \u2014'),extra);
+  }
+  return e('span',{style:{fontSize:fs,lineHeight:'20px'}},
+    e('span',{style:{fontWeight:700,color:gColor}},gLabel),' ',
+    e('span',{style:{color:color||'#E6EDF3'}},n),extra);
+}
+
+
+function Badge(props){
+  return e('span',{onClick:props.onClick,style:{
+    fontSize:9,padding:'4px 8px',borderRadius:99,
+    background:props.color+'15',color:props.color,border:'1px solid '+props.color+'33',
+    whiteSpace:'nowrap',lineHeight:'16px',
+    cursor:props.onClick?'pointer':'default',
+    letterSpacing:0.8,textTransform:'uppercase',fontWeight:600,
+    verticalAlign:'middle',marginLeft:7
+  }},props.text);
+}
+
+
+/* ── ChildLabel: CSS-only animation, no intervals ── */
+function ChildLabel(props){
+  var count=props.count,isExp=props.isExpanded,fc=props.familyColor,onToggle=props.onToggle;
+  var label=count+(count===1?' child':' children');
+  return e('div',{onClick:function(ev){ev.stopPropagation();onToggle()},
+    style:{fontSize:12,marginTop:4,cursor:'pointer',lineHeight:'20px',position:'relative',height:20}},
+    isExp
+      ?e('span',{style:{color:fc+'cc'}},label)
+      :e(React.Fragment,null,
+          e('span',{style:{position:'absolute',color:fc+'cc',animation:'altA 2.8s ease-in-out infinite'}},label),
+          e('span',{style:{position:'absolute',color:'#6B7280',animation:'altB 2.8s ease-in-out infinite'}},'Click to explore')
+        )
+  );
+}
+
+
+function TreeNode(props){
+  var pid=props.pid,depth=props.depth,expanded=props.expanded,toggleExpand=props.toggleExpand;
+  var activeFamily=props.activeFamily,onSwitchFamily=props.onSwitchFamily;
+  var noteOpen=props.noteOpen,setNoteOpen=props.setNoteOpen,flashId=props.flashId;
+  var p=P[pid];if(!p)return null;
+  var unions=getUnions(pid);
+  var marriedInto=unions.length===0?getMarriedInto(pid):null;
+  var familyColor=FM[activeFamily].color;
+  var note=NOTES[pid];
+  var isFlashing=flashId===pid;
+  var flashRef=useRef(null);
+
+
+  useEffect(function(){
+    if(isFlashing&&flashRef.current){
+      setTimeout(function(){flashRef.current&&flashRef.current.scrollIntoView({behavior:'smooth',block:'center'})},150);
+    }
+  },[isFlashing]);
+
+
+  var childProps={expanded:expanded,toggleExpand:toggleExpand,activeFamily:activeFamily,
+    onSwitchFamily:onSwitchFamily,noteOpen:noteOpen,setNoteOpen:setNoteOpen,flashId:flashId};
+
+
+  return e('div',{style:{marginLeft:depth>0?14:0}},
+    e('div',{ref:flashRef,
+      style:{padding:'10px 14px',marginBottom:1,borderRadius:8,
+        animation:isFlashing?'flash 0.6s ease-in-out 4':'none'}},
+      e('div',{style:{lineHeight:'22px'}},
+        e(PersonLine,{p:p,fontSize:14,extraAfter:e(React.Fragment,null,
+          p[3]==='a'?e('span',{style:{fontWeight:700,color:COL_A,fontSize:14,marginLeft:4}},'A'):null,
+          p[3]==='s'?e('span',{style:{fontWeight:700,color:COL_SP,fontSize:14,marginLeft:4}},'SP'):null,
+          note?e('span',{onClick:function(ev){ev.stopPropagation();setNoteOpen(noteOpen===pid?null:pid)},
+            style:{fontWeight:700,color:familyColor,fontSize:10,marginLeft:5,cursor:'pointer',
+              textDecoration:'underline',textDecorationStyle:'dotted',textUnderlineOffset:2}},'INFO'):null,
+          marriedInto&&P[marriedInto[0]]?e(Badge,{text:FM[P[marriedInto[0]][2]].name,
+            color:FM[P[marriedInto[0]][2]].color,
+            onClick:function(ev){ev.stopPropagation();onSwitchFamily(P[marriedInto[0]][2],marriedInto[0])}}):null
+        )})
+      ),
+      noteOpen===pid&&note?e('div',{style:{fontSize:11.5,color:'#9CA3AF',marginTop:6,padding:'6px 10px',
+        background:'#161B22',borderRadius:8,border:'1px solid #30363D',lineHeight:1.6,textAlign:'justify'}},renderNote(note)):null,
+      unions.map(function(u,i){
+        var sp=u[1]?P[u[1]]:null;
+        var spNote=u[1]?NOTES[u[1]]:null;
+        var crossFam=sp&&sp[2]!==activeFamily?FM[sp[2]]:null;
+        var unionKey=pid+'-'+i;
+        var isUnionExpanded=expanded.has(unionKey);
+        return e('div',{key:i,style:{marginTop:6}},
+          sp?e('div',{style:{lineHeight:'20px'}},
+            e('span',{style:{fontWeight:700,color:'#8B949E',fontSize:12.5}},'U'),' ',
+            e(PersonLine,{p:sp,fontSize:12.5,color:'#9CA3AF',extraAfter:e(React.Fragment,null,
+              sp[3]==='a'?e('span',{style:{fontWeight:700,color:COL_A,fontSize:12.5,marginLeft:4}},'A'):null,
+              spNote?e('span',{onClick:function(ev){ev.stopPropagation();setNoteOpen(noteOpen===u[1]?null:u[1])},
+                style:{fontWeight:700,color:familyColor,fontSize:10,marginLeft:5,cursor:'pointer',
+                  textDecoration:'underline',textDecorationStyle:'dotted',textUnderlineOffset:2}},'INFO'):null,
+              crossFam?e(Badge,{text:crossFam.name,color:crossFam.color,
+                onClick:function(ev){ev.stopPropagation();onSwitchFamily(sp[2],u[1])}}):null
+            )})
+          ):null,
+          noteOpen===u[1]&&spNote?e('div',{style:{fontSize:11.5,color:'#9CA3AF',marginTop:5,padding:'6px 10px',
+            background:'#161B22',borderRadius:8,border:'1px solid #30363D',lineHeight:1.6,textAlign:'justify'}},renderNote(spNote)):null,
+          u[2].length>0?e(ChildLabel,{count:u[2].length,isExpanded:isUnionExpanded,familyColor:familyColor,
+            onToggle:function(){toggleExpand(unionKey)}}):null
+        );
+      })
+    ),
+    unions.map(function(u,ui){
+      var uKey=pid+'-'+ui;
+      return expanded.has(uKey)?e('div',{key:ui,style:{borderLeft:'1px solid #E6EDF3',marginLeft:9}},
+        u[2].map(function(cid){
+          return e(TreeNode,Object.assign({key:cid,pid:cid,depth:depth+1},childProps));
+        })
+      ):null;
+    })
+  );
+}
+
+
+function App(){
+  var s1=useState(null),activeFamily=s1[0],setActiveFamily=s1[1];
+  var s2=useState(''),searchQ=s2[0],setSearchQ=s2[1];
+  var s3=useState(false),showSearch=s3[0],setShowSearch=s3[1];
+  var s4=useState(null),noteOpen=s4[0],setNoteOpen=s4[1];
+  var s5=useState(false),showGotra=s5[0],setShowGotra=s5[1];
+  var s6=useState(new Set()),expanded=s6[0],setExpanded=s6[1];
+  var s7=useState(null),flashId=s7[0],setFlashId=s7[1];
+  var searchRef=useRef(null);
+
+
+  var results=useMemo(function(){
+    if(searchQ.length<2)return[];
+    var q=searchQ.toLowerCase();
+    return Object.entries(P).filter(function(x){
+      return!isFullUnk(x[1][0])&&x[1][0].toLowerCase().indexOf(q)!==-1;
+    }).map(function(x){
+      var id=x[0],p=x[1],pre=null,name=p[0],post=null;
+      if(p[3]==='p')pre='\u2014 ';
+      else if(p[0].indexOf(' ')===-1)post=' \u2014';
+      return{id:id,name:name,pre:pre,post:post,g:p[1],fam:p[2]};
+    }).slice(0,12);
+  },[searchQ]);
+
+
+  var toggleExpand=useCallback(function(unionKey){
+    setExpanded(function(prev){
+      var n=new Set(prev);
+      if(n.has(unionKey)){
+        n.delete(unionKey);
+        var collapseId=unionKey.substring(0,unionKey.lastIndexOf('-'));
+        var uIdx=parseInt(unionKey.substring(unionKey.lastIndexOf('-')+1));
+        var collapseUnions=getUnions(collapseId);
+        if(collapseUnions[uIdx]){
+          collapseUnions[uIdx][2].forEach(function(cid){
+            getDescendantKeys(cid).forEach(function(k){n.delete(k)});
+          });
+        }
+      }else{
+        var pid=unionKey.substring(0,unionKey.lastIndexOf('-'));
+        prev.forEach(function(k){
+          if(k.substring(0,k.lastIndexOf('-'))===pid&&k!==unionKey){
+            n.delete(k);
+            var sibIdx=parseInt(k.substring(k.lastIndexOf('-')+1));
+            var sibUnions=getUnions(pid);
+            if(sibUnions[sibIdx]){
+              sibUnions[sibIdx][2].forEach(function(cid){
+                getDescendantKeys(cid).forEach(function(dk){n.delete(dk)});
+              });
+            }
+          }
+        });
+        n.add(unionKey);
+      }
+      return n;
+    });
+  },[]);
+
+
+  var handleSearchSelect=useCallback(function(id,fam){
+    setActiveFamily(fam);
+    var r=resolveInFamily(id,fam);
+    setExpanded(new Set(r.path));
+    setFlashId(r.flash);setTimeout(function(){setFlashId(null)},2400);
+    setSearchQ('');setShowSearch(false);
+  },[]);
+
+
+  var handleSwitchFamily=useCallback(function(fam,personId){
+    setActiveFamily(fam);
+    if(personId){
+      var r=resolveInFamily(personId,fam);
+      setExpanded(new Set(r.path));
+      setFlashId(r.flash);setTimeout(function(){setFlashId(null)},2400);
+    }
+  },[]);
+
+
+  var fm=activeFamily?FM[activeFamily]:null;
+  var isLanding=activeFamily===null;
+
+
+  return e('div',{style:{minHeight:'100vh',background:'#0D1117',color:'#E6EDF3',
+    fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif',
+    display:'flex',flexDirection:'column',maxWidth:600,margin:'0 auto'}},
+
+
+    isLanding?null:
+    e('div',{style:{position:'sticky',top:0,zIndex:100,backdropFilter:'blur(20px)',
+      WebkitBackdropFilter:'blur(20px)',background:'#0D1117dd',borderBottom:'1px solid #1C2128',padding:'12px 16px',
+      animation:'fadeIn 0.6s ease'}},
+      e('div',{style:{position:'relative'}},
+        e('div',{onClick:function(){setShowSearch(true);setTimeout(function(){searchRef.current&&searchRef.current.focus()},50)},
+          style:{background:'#161B22',border:'1px solid #30363D',borderRadius:12,
+            padding:'11px 14px',fontSize:14,color:showSearch?'#E6EDF3':'#6B7280',
+            display:'flex',alignItems:'center',gap:9,cursor:'text'}},
+          e('span',{style:{opacity:0.4,fontSize:18}},'\u2315'),
+          showSearch?e('input',{ref:searchRef,value:searchQ,
+            onChange:function(ev){setSearchQ(ev.target.value)},
+            onBlur:function(){setTimeout(function(){setShowSearch(false)},200)},
+            placeholder:'Type a name',
+            style:{background:'none',border:'none',outline:'none',color:'#E6EDF3',
+              fontSize:14,width:'100%',fontFamily:'inherit'}}):e('span',null,'Find yourself')
+        ),
+        results.length>0&&showSearch?e('div',{style:{
+          position:'absolute',top:'100%',left:0,right:0,marginTop:4,
+          background:'#161B22',border:'1px solid #30363D',borderRadius:12,
+          overflow:'hidden',zIndex:200,boxShadow:'0 8px 32px #00000066'}},
+          results.map(function(r){
+            return e('div',{key:r.id,onMouseDown:function(){handleSearchSelect(r.id,r.fam)},
+              style:{padding:'12px 14px',cursor:'pointer',display:'flex',
+                alignItems:'center',gap:6,borderBottom:'1px solid #1C2128',
+                fontSize:13,lineHeight:'20px'},
+              onMouseEnter:function(ev){ev.currentTarget.style.background='#1C2128'},
+              onMouseLeave:function(ev){ev.currentTarget.style.background='transparent'}},
+              e('span',{style:{fontWeight:700,color:MC[r.g]}},r.g==='f'?'XX':'XY'),
+              e('span',{style:{flex:1}},
+                r.pre?e('span',{style:{color:'#6B7280',fontStyle:'italic'}},r.pre):null,
+                e('span',null,r.name),
+                r.post?e('span',{style:{color:'#6B7280',fontStyle:'italic'}},r.post):null
+              ),
+              e('span',{style:{fontSize:9,color:'#6B7280',textTransform:'uppercase',letterSpacing:0.8,fontWeight:500}},FM[r.fam].name)
+            );
+          })
+        ):null
+      )
+    ),
+
+
+    isLanding?
+    e('div',{style:{flex:1,display:'flex',alignItems:'center',justifyContent:'center',paddingBottom:45}},
+      e('div',{style:{textAlign:'center',color:'#555E68',fontSize:14,letterSpacing:0.3}},
+        'Select a family tree to continue')
+    ):
+    e('div',{style:{flex:1,overflowY:'auto',paddingBottom:90,paddingTop:4,animation:'fadeIn 0.6s ease'}},
+      e('div',{onClick:function(){setShowGotra(!showGotra)},
+        style:{margin:'8px 12px',padding:'10px 14px',borderRadius:10,
+          background:fm.color+'0A',border:'1px solid '+fm.color+'18',cursor:'pointer'}},
+        e('div',{style:{fontSize:12,color:fm.color,fontWeight:500,lineHeight:'20px'}},
+          'Gotra lineage \u2014 '+fm.gotra,
+          e('span',{style:{float:'right',display:'inline-block',transition:'transform 0.15s',
+            transform:showGotra?'rotate(90deg)':'rotate(0)',fontSize:9}},'\u25B6')
+        ),
+        showGotra?e('div',{style:{fontSize:11.5,color:'#9CA3AF',marginTop:8,lineHeight:1.6,textAlign:'justify'}},fm.gotraDesc):null
+      ),
+      e('div',{style:{position:'relative',marginLeft:12}},
+        e('div',{style:{position:'absolute',left:0,top:0,bottom:0,width:1,background:fm.color}}),
+        e('div',{style:{marginLeft:14}},
+          e(TreeNode,{pid:fm.root,depth:0,expanded:expanded,toggleExpand:toggleExpand,
+            activeFamily:activeFamily,onSwitchFamily:handleSwitchFamily,
+            noteOpen:noteOpen,setNoteOpen:setNoteOpen,flashId:flashId})
+        )
+      )
+    ),
+
+
+    e('div',{style:{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',
+      width:'100%',maxWidth:600,zIndex:100}},
+      isLanding?null:
+      e('div',{style:{background:'#0D1117',borderTop:'1px solid #1C2128',
+        padding:'8px 16px',display:'flex',flexWrap:'wrap',gap:14,justifyContent:'center',
+        fontSize:11,color:'#555E68',lineHeight:'18px',animation:'fadeIn 0.6s ease'}},
+        e('span',null,e('span',{style:{fontWeight:700,color:'#6BA3C9'}},'XY'),' Male'),
+        e('span',null,e('span',{style:{fontWeight:700,color:'#C97BA3'}},'XX'),' Female'),
+        e('span',null,e('span',{style:{fontWeight:700,color:'#8B949E'}},'U'),' Spouse'),
+        e('span',null,e('span',{style:{fontWeight:700,color:COL_A}},'A'),' Adopted'),
+        e('span',null,e('span',{style:{fontWeight:700,color:COL_SP}},'SP'),' Single parent')
+      ),
+      e('div',{style:{display:'flex',background:'#0D1117',borderTop:'1px solid #1C2128'}},
+        Object.entries(FM).map(function(x){
+          var k=x[0],f=x[1];
+          var isActive=activeFamily===k;
+          return e('div',{key:k,onClick:function(){setActiveFamily(k);setNoteOpen(null);setShowGotra(false);setExpanded(new Set());setFlashId(null)},
+            style:{flex:1,padding:'15px 4px',textAlign:'center',cursor:'pointer'}},
+            e('div',{style:{fontSize:13,
+              fontWeight:isLanding?600:isActive?600:400,
+              color:isLanding?'#FFFFFF':isActive?f.color:'#555E68',
+              textTransform:'uppercase',
+              letterSpacing:1,
+              transition:'all 0.3s',
+              animation:isLanding?'tabPulse 1.5s ease-in-out infinite':'none'}},f.name)
+          );
+        })
+      )
+    )
+  );
+}
+
+
+ReactDOM.render(e(App),document.getElementById('root'));
+</script>
+</body>
+</html>
