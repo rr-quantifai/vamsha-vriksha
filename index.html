@@ -582,24 +582,24 @@ function App(){
 
     isLanding?null:
     e('div',{style:{position:'sticky',top:0,zIndex:100,backdropFilter:'blur(20px)',
-      WebkitBackdropFilter:'blur(20px)',background:'#0D1117dd',borderBottom:'1px solid #1C2128',padding:'12px 16px',
+      WebkitBackdropFilter:'blur(20px)',background:'#0D1117dd',borderBottom:'1px solid #1C2128',padding:'12px',
       animation:'fadeIn 0.6s ease'}},
       e('div',{style:{position:'relative'}},
         e('div',{onClick:function(){setShowSearch(true);setTimeout(function(){searchRef.current&&searchRef.current.focus()},50)},
-          style:{background:'#161B22',border:'1px solid #30363D',borderRadius:12,
+          style:{background:'#161B22',border:'1px solid #30363D',borderRadius:10,
             padding:'11px 14px',fontSize:14,color:showSearch?'#E6EDF3':'#6B7280',
             display:'flex',alignItems:'center',gap:9,cursor:'text'}},
-          e('span',{style:{opacity:0.4,fontSize:18}},'🔍'),
+          e('span',{style:{fontSize:15,lineHeight:1}},'🔍'),
           showSearch?e('input',{ref:searchRef,value:searchQ,
             onChange:function(ev){setSearchQ(ev.target.value)},
             onBlur:function(){setTimeout(function(){setShowSearch(false)},200)},
             placeholder:'Type a name',
             style:{background:'none',border:'none',outline:'none',color:'#E6EDF3',
-              fontSize:14,width:'100%',fontFamily:'inherit'}}):e('span',null,'Find yourself')
+              fontSize:14,width:'100%',fontFamily:'inherit'}}):e('span',null,'Find yourself...')
         ),
         results.length>0&&showSearch?e('div',{style:{
           position:'absolute',top:'100%',left:0,right:0,marginTop:4,
-          background:'#161B22',border:'1px solid #30363D',borderRadius:12,
+          background:'#161B22',border:'1px solid #30363D',borderRadius:10,
           overflow:'hidden',zIndex:200,boxShadow:'0 8px 32px #00000066'}},
           results.map(function(r){
             return e('div',{key:r.id,onMouseDown:function(){handleSearchSelect(r.id,r.fam)},
@@ -627,9 +627,9 @@ function App(){
       e('div',{style:{textAlign:'center',color:'#555E68',fontSize:14,letterSpacing:0.3}},
         'Select a family tree to continue')
     ):
-    e('div',{style:{flex:1,overflowY:'auto',paddingBottom:90,paddingTop:4,animation:'fadeIn 0.6s ease'}},
+    e('div',{style:{flex:1,overflowY:'auto',paddingBottom:90,paddingTop:0,animation:'fadeIn 0.6s ease'}},
       e('div',{onClick:function(){setShowGotra(!showGotra)},
-        style:{margin:'8px 12px',padding:'10px 14px',borderRadius:10,
+        style:{margin:'12px',padding:'10px 14px',borderRadius:10,
           background:fm.color+'0A',border:'1px solid '+fm.color+'18',cursor:'pointer'}},
         e('div',{style:{fontSize:12,color:fm.color,fontWeight:500,lineHeight:'20px'}},
           'Gotra lineage \u2014 '+fm.gotra,
