@@ -327,24 +327,23 @@ function traceToRoot(pid,root){
 }
 
 
-function resolveInFamily(pid,fk){
-  var root=FM[fk].root,direct=traceToRoot(pid,root);
-  if(direct)return{path:direct,flash:pid};
-  for(var i=0;i<U.length;i++){
-    if(U[i][1]===pid&&U[i][0]){var pp=traceToRoot(U[i][0],root);if(pp)return{path:pp,flash:U[i][0]}}
+function resolveInFamily(pid, fk) {
+  var root = FM[fk].root, direct = traceToRoot(pid, root);
+  if (direct) return { path: direct, flash: pid };
+  var mu = getMarriedInto(pid);
+  if (mu && mu[0]) {
+    var pp = traceToRoot(mu[0], root);
+    if (pp) return { path: pp, flash: mu[0] };
   }
-  return{path:new Set(),flash:pid};
+  return { path: new Set(), flash: pid };
 }
 
 
-function getDescendantKeys(pid){
-  var keys=new Set();
-  var unions=getUnions(pid);
-  unions.forEach(function(u,i){
-    keys.add(pid+'-'+i);
-    u[2].forEach(function(cid){
-      getDescendantKeys(cid).forEach(function(k){keys.add(k)});
-    });
+function getDescendantKeys(pid, keys) {
+  keys = keys || new Set();
+  getUnions(pid).forEach(function(u, i) {
+    keys.add(pid + '-' + i);
+    u[2].forEach(function(cid) { getDescendantKeys(cid, keys); });
   });
   return keys;
 }
