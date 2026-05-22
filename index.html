@@ -589,7 +589,7 @@ function App(){
           style:{background:'#161B22',border:'1px solid #30363D',borderRadius:12,
             padding:'11px 14px',fontSize:14,color:showSearch?'#E6EDF3':'#6B7280',
             display:'flex',alignItems:'center',gap:9,cursor:'text'}},
-          e('span',{style:{opacity:0.4,fontSize:18}},'\u2315'),
+          e('span',{style:{opacity:0.4,fontSize:18}},'🔍'),
           showSearch?e('input',{ref:searchRef,value:searchQ,
             onChange:function(ev){setSearchQ(ev.target.value)},
             onBlur:function(){setTimeout(function(){setShowSearch(false)},200)},
