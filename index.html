@@ -283,8 +283,6 @@ var U=[
 ['g69','g69s',[]],['g43','g43s',[]],['g46','g46s',[]]
 ];
 
-
-/* ── Lookup maps (O(1) instead of linear scans) ── */
 var UByParent={},UByChild={},UBySpouse={};
 U.forEach(function(u){
   if(!UByParent[u[0]])UByParent[u[0]]=[];
@@ -399,8 +397,6 @@ function Badge(props){
   }},props.text);
 }
 
-
-/* ── ChildLabel: CSS-only animation, no intervals ── */
 function ChildLabel(props){
   var count=props.count,isExp=props.isExpanded,fc=props.familyColor,onToggle=props.onToggle;
   var label=count+(count===1?' child':' children');
